@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:  # allows manual deploys
+  workflow_dispatch:  # allows manual trigger from GitHub UI
 
 jobs:
   deploy:
@@ -12,34 +12,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 — Checkout code
       - name: 🧾 Checkout code
         uses: actions/checkout@v4
 
-      # Step 2 — Setup SSH and permissions
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          printf "%s\n" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # Step 3 — Test SSH connection
       - name: 🧠 Test SSH connectivity
         run: |
           ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful!'"
 
-      # Step 4 — Deploy application
       - name: 🚀 Deploy application
         run: |
           ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
-            echo "🔄 Pulling latest code..."
-            cd /home/ubuntu/productai-mcp-server || git clone https://github.com/goutama-opura/productai-mcp-server.git && cd productai-mcp-server
+            echo "🔄 Preparing deployment on EC2..."
+
+            cd /home/ubuntu
+
+            # Clone repo if not present
+            if [ ! -d "productai-mcp-server" ]; then
+              echo "📂 Cloning fresh repository..."
+              git clone https://github.com/goutama-opura/productai-mcp-server.git
+            fi
+
+            cd productai-mcp-server
+            echo "🔄 Fetching latest code..."
             git fetch origin main
             git reset --hard origin/main
-            echo "🐳 Rebuilding Docker containers..."
-            docker compose down || true
-            docker compose up --build -d
+
+            echo "🧩 Writing environment variables..."
+            echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
+            echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+
+            if [ -f docker-compose.yml ]; then
+              echo "🐳 Rebuilding Docker containers..."
+              docker compose down || true
+              docker compose up --build -d
+            else
+              echo "🚀 Starting Python app..."
+              nohup python3 services/mcp_server/main.py > app.log 2>&1 &
+            fi
+
             echo "✅ Deployment completed successfully!"
           EOF

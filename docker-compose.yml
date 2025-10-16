@@ -1,4 +1,5 @@
 version: '3.9'
+
 services:
   mcp-server:
     build: .
@@ -10,4 +11,4 @@ services:
     volumes:
       - .:/app
     command: >
-      bash -c "python services/mcp_server/main.py"
+      bash -c "uvicorn services.mcp_server.router_agent:app --host 0.0.0.0 --port 8001"

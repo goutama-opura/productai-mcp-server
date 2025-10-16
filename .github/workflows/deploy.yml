@@ -1,9 +1,10 @@
-name: 🚀 Deploy ProductAI to AWS EC2
+name: 🚀 Deploy ProductAI MCP Server to AWS EC2
 
 on:
   push:
     branches:
-      - main  # Triggers deployment on every push to main branch
+      - main
+  workflow_dispatch:  # allows manual deploys
 
 jobs:
   deploy:
@@ -11,32 +12,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the latest code
+      # Step 1 — Checkout code
       - name: 🧾 Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Setup SSH key for EC2 access
+      # Step 2 — Setup SSH and permissions
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          printf "%s\n" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      # Step 3: Deploy to AWS EC2
-      - name: 🚀 Deploy application
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USER: ${{ secrets.EC2_USER }}
+      # Step 3 — Test SSH connection
+      - name: 🧠 Test SSH connectivity
         run: |
-          ssh -i ~/.ssh/id_ed25519 $EC2_USER@$EC2_HOST << 'EOF'
+          ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful!'"
+
+      # Step 4 — Deploy application
+      - name: 🚀 Deploy application
+        run: |
+          ssh -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
-            cd /home/ubuntu/productai-mcp-server || git clone https://github.com/goutama-opura/productai-mcp-server.git && cd productai-mcp-server
             echo "🔄 Pulling latest code..."
-            git fetch origin
+            cd /home/ubuntu/productai-mcp-server || git clone https://github.com/goutama-opura/productai-mcp-server.git && cd productai-mcp-server
+            git fetch origin main
             git reset --hard origin/main
             echo "🐳 Rebuilding Docker containers..."
-            docker compose down
+            docker compose down || true
             docker compose up --build -d
             echo "✅ Deployment completed successfully!"
           EOF

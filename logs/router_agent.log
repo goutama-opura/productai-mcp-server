@@ -1,0 +1,24 @@
+2025-10-16 19:39:17.727 | INFO     | services.mcp_server.router_agent:chat_router:53 - 🧭 Routing message: How do I track my order?
+2025-10-16 19:39:21.164 | INFO     | services.mcp_server.router_agent:chat_router:66 - 🔍 Router raw output: {
+  "intent": "faq",
+  "tool_to_use": "faq",
+  "reason": "User is asking about order tracking, which is a common FAQ.",
+  "next_action": "Please provide your order number for tracking details."
+}
+2025-10-16 19:39:21.165 | INFO     | services.mcp_server.router_agent:chat_router:84 - 📚 Routing to FAQ tool
+2025-10-16 19:40:00.029 | INFO     | services.mcp_server.router_agent:chat_router:53 - 🧭 Routing message: What do people think about Samsung Galaxy S24?
+2025-10-16 19:40:02.425 | INFO     | services.mcp_server.router_agent:chat_router:66 - 🔍 Router raw output: {
+  "intent": "reviews",
+  "tool_to_use": "reviews",
+  "reason": "User is asking for customer opinions and feedback on a specific product.",
+  "next_action": "I'll find you some reviews for the Samsung Galaxy S24."
+}
+2025-10-16 19:40:02.426 | INFO     | services.mcp_server.router_agent:chat_router:94 - ⭐ Routing to Reviews tool
+2025-10-16 19:40:19.153 | INFO     | services.mcp_server.router_agent:chat_router:53 - 🧭 Routing message: Who won the cricket match yesterday?
+2025-10-16 19:40:21.725 | INFO     | services.mcp_server.router_agent:chat_router:66 - 🔍 Router raw output: {
+  "intent": "fallback",
+  "tool_to_use": "none",
+  "reason": "The query is about sports and not related to e-commerce.",
+  "next_action": "Feel free to ask about our products or services!"
+}
+2025-10-16 19:40:21.725 | INFO     | services.mcp_server.router_agent:chat_router:109 - 💬 Sending fallback response

@@ -1,0 +1,32 @@
+2025-10-16 19:44:32.588 | INFO     | services.mcp_server.router_agent:chat_router:88 - 🧭 Incoming message: How do I reset my password?
+2025-10-16 19:44:34.620 | INFO     | services.mcp_server.router_agent:chat_router:101 - 🔍 Router output: {
+  "intent": "faq",
+  "tool_to_use": "faq",
+  "reason": "User is asking about account management.",
+  "next_action": "Provide instructions for resetting a password."
+}
+2025-10-16 19:44:34.620 | INFO     | services.mcp_server.router_agent:chat_router:118 - 📚 Routed → FAQ tool
+2025-10-16 19:47:15.748 | INFO     | services.mcp_server.router_agent:chat_router:88 - 🧭 Incoming message: What do customers say about the iPhone 15 Pro?
+2025-10-16 19:47:18.715 | INFO     | services.mcp_server.router_agent:chat_router:101 - 🔍 Router output: {
+  "intent": "reviews",
+  "tool_to_use": "reviews",
+  "reason": "User is asking for customer feedback on a specific product.",
+  "next_action": "Fetch reviews for the iPhone 15 Pro."
+}
+2025-10-16 19:47:18.715 | INFO     | services.mcp_server.router_agent:chat_router:123 - ⭐ Routed → Reviews tool
+2025-10-16 19:47:34.524 | INFO     | services.mcp_server.router_agent:chat_router:88 - 🧭 Incoming message: How do I reset my password?
+2025-10-16 19:47:37.351 | INFO     | services.mcp_server.router_agent:chat_router:101 - 🔍 Router output: {
+  "intent": "faq",
+  "tool_to_use": "faq",
+  "reason": "User is asking about account management.",
+  "next_action": "Provide instructions for resetting a password."
+}
+2025-10-16 19:47:37.352 | INFO     | services.mcp_server.router_agent:chat_router:118 - 📚 Routed → FAQ tool
+2025-10-16 19:48:12.249 | INFO     | services.mcp_server.router_agent:chat_router:88 - 🧭 Incoming message: Who won the cricket match yesterday?
+2025-10-16 19:48:13.932 | INFO     | services.mcp_server.router_agent:chat_router:101 - 🔍 Router output: {
+  "intent": "fallback",
+  "tool_to_use": "none",
+  "reason": "The query is about sports news, not related to e-commerce.",
+  "next_action": "Provide information on e-commerce related queries."
+}
+2025-10-16 19:48:13.933 | INFO     | services.mcp_server.router_agent:chat_router:132 - 💬 Routed → Fallback

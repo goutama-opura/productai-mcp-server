@@ -1,0 +1,213 @@
+2025-10-16 18:55:05.121 | INFO     | services.mcp_server.api_gateway:<module>:18 - 🚀 Starting ProductAI API Gateway
+2025-10-16 18:55:19.693 | INFO     | services.mcp_server.api_gateway:faq_tool:33 - [FAQ Tool] Query: How do I reset my password?
+2025-10-16 18:55:20.718 | ERROR    | services.mcp_server.api_gateway:faq_tool:38 - FAQ Tool failed
+Traceback (most recent call last):
+
+  File "<string>", line 1, in <module>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               │     │   └ 4
+               │     └ 7
+               └ <function _main at 0x10122fa60>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/spawn.py", line 135, in _main
+    return self._bootstrap(parent_sentinel)
+           │    │          └ 4
+           │    └ <function BaseProcess._bootstrap at 0x10102f880>
+           └ <SpawnProcess name='SpawnProcess-1' parent=35270 started>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+    self.run()
+    │    └ <function BaseProcess.run at 0x10102ede0>
+    └ <SpawnProcess name='SpawnProcess-1' parent=35270 started>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {'config': <uvicorn.config.Config object at 0x101355610>, 'target': <bound method Server.run of <uvicorn.server.Server object...
+    │    │        │    │        └ <SpawnProcess name='SpawnProcess-1' parent=35270 started>
+    │    │        │    └ ()
+    │    │        └ <SpawnProcess name='SpawnProcess-1' parent=35270 started>
+    │    └ <function subprocess_started at 0x1019aaca0>
+    └ <SpawnProcess name='SpawnProcess-1' parent=35270 started>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+    │              └ [<socket.socket fd=3, family=2, type=1, proto=0, laddr=('0.0.0.0', 8001)>]
+    └ <bound method Server.run of <uvicorn.server.Server object at 0x101a7b290>>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 67, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           │           │    │             │                      │    │      └ <function Config.get_loop_factory at 0x10193d760>
+           │           │    │             │                      │    └ <uvicorn.config.Config object at 0x101355610>
+           │           │    │             │                      └ <uvicorn.server.Server object at 0x101a7b290>
+           │           │    │             └ [<socket.socket fd=3, family=2, type=1, proto=0, laddr=('0.0.0.0', 8001)>]
+           │           │    └ <function Server.serve at 0x1019aa2a0>
+           │           └ <uvicorn.server.Server object at 0x101a7b290>
+           └ <function run at 0x1015dd940>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           │      │   └ <coroutine object Server.serve at 0x100f93680>
+           │      └ <function Runner.run at 0x1016418a0>
+           └ <asyncio.runners.Runner object at 0x1015cedb0>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           │    │     │                  └ <Task pending name='Task-1' coro=<Server.serve() running at /Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server...
+           │    │     └ <function BaseEventLoop.run_until_complete at 0x101637420>
+           │    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+           └ <asyncio.runners.Runner object at 0x1015cedb0>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 674, in run_until_complete
+    self.run_forever()
+    │    └ <function BaseEventLoop.run_forever at 0x101637380>
+    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 641, in run_forever
+    self._run_once()
+    │    └ <function BaseEventLoop._run_once at 0x1016411c0>
+    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 1986, in _run_once
+    handle._run()
+    │      └ <function Handle._run at 0x1015d0e00>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x105926770>()>
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
+    │    │            │    │           └ <Handle <_asyncio.TaskStepMethWrapper object at 0x105926770>()>
+    │    │            │    └ <member '_callback' of 'Handle' objects>
+    │    │            └ <Handle <_asyncio.TaskStepMethWrapper object at 0x105926770>()>
+    │    └ <member '_context' of 'Handle' objects>
+    └ <Handle <_asyncio.TaskStepMethWrapper object at 0x105926770>()>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+                   └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x1019a4650>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+                 │    │   │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+                 │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+                 │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+                 │    └ <fastapi.applications.FastAPI object at 0x1015cde50>
+                 └ <uvicorn.middleware.proxy_headers.ProxyHeadersMiddleware object at 0x1019a4650>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/applications.py", line 1133, in __call__
+    await super().__call__(scope, receive, send)
+                           │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+                           │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+                           └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <bound method RequestResponseCycle.send of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │    └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x1059252e0>
+          └ <fastapi.applications.FastAPI object at 0x1015cde50>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+          │    │   │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x1059225c0>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │    └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x105925430>
+          └ <starlette.middleware.errors.ServerErrorMiddleware object at 0x1059252e0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+          │                            │    │    │     │      │        └ <function ServerErrorMiddleware.__call__.<locals>._send at 0x1059225c0>
+          │                            │    │    │     │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │                            │    │    │     └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │                            │    │    └ <starlette.requests.Request object at 0x105926600>
+          │                            │    └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x1059254c0>
+          │                            └ <starlette.middleware.exceptions.ExceptionMiddleware object at 0x105925430>
+          └ <function wrap_app_handling_exceptions at 0x1033dcae0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x1059254c0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │    └ <fastapi.routing.APIRouter object at 0x10582b7a0>
+          └ <fastapi.middleware.asyncexitstack.AsyncExitStackMiddleware object at 0x1059254c0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+          │    │                │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │    │                │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │                └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │    └ <bound method Router.app of <fastapi.routing.APIRouter object at 0x10582b7a0>>
+          └ <fastapi.routing.APIRouter object at 0x10582b7a0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+          │     │      │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │     │      │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │     │      └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │     └ <function Route.handle at 0x1033ddf80>
+          └ APIRoute(path='/tools/faq', name='faq_tool', methods=['POST'])
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+          │    │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │    │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │    │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │    └ <function request_response.<locals>.app at 0x105922160>
+          └ APIRoute(path='/tools/faq', name='faq_tool', methods=['POST'])
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+          │                            │    │        │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x105922700>
+          │                            │    │        │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │                            │    │        └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          │                            │    └ <starlette.requests.Request object at 0x105926540>
+          │                            └ <function request_response.<locals>.app.<locals>.app at 0x1059227a0>
+          └ <function wrap_app_handling_exceptions at 0x1033dcae0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+          │   │      │        └ <function wrap_app_handling_exceptions.<locals>.wrapped_app.<locals>.sender at 0x1059228e0>
+          │   │      └ <bound method RequestResponseCycle.receive of <uvicorn.protocols.http.h11_impl.RequestResponseCycle object at 0x105926750>>
+          │   └ {'type': 'http', 'asgi': {'version': '3.0', 'spec_version': '2.3'}, 'http_version': '1.1', 'server': ('127.0.0.1', 8001), 'cl...
+          └ <function request_response.<locals>.app.<locals>.app at 0x1059227a0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 109, in app
+    response = await f(request)
+                     │ └ <starlette.requests.Request object at 0x105926540>
+                     └ <function get_request_handler.<locals>.app at 0x1059220c0>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                         └ <function run_endpoint_function at 0x1033dfd80>
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fastapi/routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+                 │         │      └ {'request': <starlette.requests.Request object at 0x105926540>}
+                 │         └ <function faq_tool at 0x105922020>
+                 └ Dependant(path_params=[], query_params=[], header_params=[], cookie_params=[], body_params=[], dependencies=[], security_requ...
+
+> File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/services/mcp_server/api_gateway.py", line 34, in faq_tool
+    response = answer_faq(query)
+               │          └ 'How do I reset my password?'
+               └ <function answer_faq at 0x1049fd440>
+
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/services/mcp_server/tools/retrieval_tool.py", line 45, in answer_faq
+    chain = make_faq_chain()
+            └ <function make_faq_chain at 0x1049c71a0>
+
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/services/mcp_server/tools/retrieval_tool.py", line 23, in make_faq_chain
+    vectordb = FAISS.load_local(INDEX_PATH, embeddings, allow_dangerous_deserialization=True)
+               │     │          │           └ OpenAIEmbeddings(client=<openai.resources.embeddings.Embeddings object at 0x10571f470>, async_client=<openai.resources.embedd...
+               │     │          └ 'faiss_faq_index'
+               │     └ <classmethod(<function FAISS.load_local at 0x10526d4e0>)>
+               └ <class 'langchain_community.vectorstores.faiss.FAISS'>
+
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/langchain_community/vectorstores/faiss.py", line 1205, in load_local
+    index = faiss.read_index(str(path / f"{index_name}.faiss"))
+            │     │              │         └ 'index'
+            │     │              └ PosixPath('faiss_faq_index')
+            │     └ <function read_index at 0x10626d440>
+            └ <module 'faiss' from '/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/fa...
+  File "/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-packages/faiss/swigfaiss.py", line 11775, in read_index
+    return _swigfaiss.read_index(*args)
+           │          │           └ ('faiss_faq_index/index.faiss',)
+           │          └ <built-in function read_index>
+           └ <module 'faiss._swigfaiss' from '/Users/sarmagoutama/clones/opura-repos/Opura-Langchain-MCP-Server/.venv/lib/python3.12/site-...
+
+RuntimeError: Error in faiss::FileIOReader::FileIOReader(const char *) at /Users/runner/work/faiss-wheels/faiss-wheels/third-party/faiss/faiss/impl/io.cpp:70: Error: 'f' failed: could not open faiss_faq_index/index.faiss for reading: No such file or directory
+2025-10-16 18:55:28.573 | INFO     | services.mcp_server.api_gateway:reviews_tool:49 - [Reviews Tool] Product: Samsung Galaxy S24
+2025-10-16 18:55:37.227 | INFO     | services.mcp_server.api_gateway:reviews_tool:51 - [Reviews Tool] Response: ### Summary:
+The Samsung Galaxy S24 has garnered a mix of feedback from customer...
+2025-10-16 19:29:09.719 | INFO     | services.mcp_server.api_gateway:<module>:18 - 🚀 Starting ProductAI API Gateway
+2025-10-16 19:29:17.318 | INFO     | services.mcp_server.api_gateway:faq_tool:33 - [FAQ Tool] Query: How do I reset my password?
+2025-10-16 19:29:19.919 | INFO     | services.mcp_server.api_gateway:faq_tool:35 - [FAQ Tool] Response: Go to the login page and click “Forgot Password.” Enter your registered email, a...
+2025-10-16 19:37:20.760 | INFO     | services.mcp_server.api_gateway:<module>:18 - 🚀 Starting ProductAI API Gateway
+2025-10-16 19:39:21.506 | INFO     | services.mcp_server.api_gateway:faq_tool:33 - [FAQ Tool] Query: How do I track my order?
+2025-10-16 19:39:28.060 | INFO     | services.mcp_server.api_gateway:faq_tool:35 - [FAQ Tool] Response: Go to My Orders → Track Order. You’ll see the real-time status along with the co...
+2025-10-16 19:40:02.430 | INFO     | services.mcp_server.api_gateway:reviews_tool:49 - [Reviews Tool] Product: What do people think about Samsung Galaxy S24?
+2025-10-16 19:40:09.552 | INFO     | services.mcp_server.api_gateway:reviews_tool:51 - [Reviews Tool] Response: Summary:
+The Samsung Galaxy S24 has garnered a mix of feedback from customers, w...
+2025-10-16 19:43:25.822 | INFO     | services.mcp_server.api_gateway:<module>:18 - 🚀 Starting ProductAI API Gateway

@@ -1,0 +1,129 @@
+# E-Commerce Platform FAQ (ProductAI Sample)
+
+## Account & Login
+
+Q: How do I create an account?
+A: Click on “Sign Up” at the top-right corner, enter your email address, mobile number, and password, then verify your email. You can also sign up using your Google or Apple account.
+
+Q: I forgot my password. How can I reset it?
+A: Go to the login page and click “Forgot Password.” Enter your registered email, and you’ll receive a password reset link. Follow the instructions to create a new password.
+
+Q: Can I change my registered email or mobile number?
+A: Yes. Go to My Account → Profile → Edit Details. You can update your email or phone after verifying with an OTP.
+
+Q: Why am I unable to log in?
+A: Ensure your email and password are correct. If the issue persists, clear browser cookies or reset your password using the “Forgot Password” link.
+
+---
+
+## Orders & Payments
+
+Q: How do I place an order?
+A: Browse any product, click “Add to Cart,” then “Proceed to Checkout.” Enter your shipping address, select a payment method, and confirm your order.
+
+Q: What payment methods are supported?
+A: We support credit/debit cards, UPI, net banking, PayPal, digital wallets, and cash-on-delivery (COD) for eligible locations.
+
+Q: Can I use multiple payment methods in one order?
+A: Currently, only one payment method can be used per order.
+
+Q: My payment failed but money was deducted. What should I do?
+A: Don’t worry. Payments are automatically reversed within 3–5 business days. If not, contact support@productai.store with your transaction ID.
+
+---
+
+## Shipping & Delivery
+
+Q: How long does delivery take?
+A: Standard delivery takes 3–7 business days depending on your location. Express delivery (1–2 days) is available for select pin codes.
+
+Q: How can I track my order?
+A: Go to My Orders → Track Order. You’ll see the real-time status along with the courier partner’s name and tracking ID.
+
+Q: Do you offer international shipping?
+A: Yes, we deliver to most countries. International shipping charges and timelines are shown at checkout.
+
+Q: What should I do if my order is delayed?
+A: Sometimes delays occur due to weather, logistics, or stock issues. You can contact our support team to get an update or cancel the order for a full refund.
+
+---
+
+## Returns, Refunds & Replacements
+
+Q: What is your return policy?
+A: Most items are eligible for return within 10 days of delivery. Products must be unused, undamaged, and in original packaging.
+
+Q: How do I initiate a return or replacement?
+A: Go to My Orders → Select the order → Click “Return or Replace.” Choose the reason and follow the steps. A pickup will be arranged.
+
+Q: How long does a refund take?
+A: Refunds are processed within 5–7 business days after we receive the returned product.
+
+Q: What if I receive a damaged or wrong item?
+A: Report it within 48 hours of delivery through My Orders or support@productai.store. We’ll arrange an instant replacement or refund.
+
+---
+
+## Offers & Discounts
+
+Q: How can I use a coupon code?
+A: Apply your coupon at checkout in the “Have a Promo Code?” section. The discount will appear before payment.
+
+Q: My promo code isn’t working. Why?
+A: Check expiry date, usage limit, or minimum order value. Some coupons are product-specific or user-specific.
+
+Q: Can I combine multiple discount codes?
+A: Only one coupon can be applied per order unless stated otherwise.
+
+---
+
+## Loyalty & Membership
+
+Q: What is ProductAI Plus Membership?
+A: ProductAI Plus is a premium membership offering free shipping, early access to sales, and exclusive deals for ₹499/year.
+
+Q: How can I subscribe to ProductAI Plus?
+A: Go to My Account → Membership → Subscribe. Choose your plan and pay using any digital method.
+
+Q: Can I cancel my membership?
+A: Yes, you can cancel anytime in My Account → Membership. Partial refunds may apply based on usage.
+
+---
+
+## Product & Stock
+
+Q: How do I know if an item is in stock?
+A: The product page displays stock availability. “Out of Stock” items can be wish-listed for notifications.
+
+Q: Do you sell refurbished or used items?
+A: All products are brand new unless clearly marked as “Refurbished.”
+
+Q: Can I pre-order upcoming items?
+A: Yes. Pre-orders are available for selected new launches. Estimated delivery dates are mentioned on the product page.
+
+---
+
+## Technical & App Support
+
+Q: The app is not loading or keeps crashing. What should I do?
+A: Update the app to the latest version and ensure a stable internet connection. If the issue persists, reinstall or contact support.
+
+Q: I am not receiving order notifications.
+A: Enable push notifications in your app settings and check your device permissions.
+
+---
+
+## Contact & Support
+
+Q: How can I contact customer support?
+A: Email us at support@productai.store or call 1800-123-4567 (Mon–Sat, 9 AM–9 PM).
+
+Q: Do you have live chat support?
+A: Yes, live chat is available in the mobile app and website under Help → Chat with Us.
+
+Q: What are your working hours?
+A: Our customer service operates Monday to Saturday, 9 AM–9 PM IST.
+
+---
+
+# End of FAQ

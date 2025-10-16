@@ -1,0 +1,42 @@
+name: 🚀 Deploy ProductAI to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # Triggers deployment on every push to main branch
+
+jobs:
+  deploy:
+    name: Deploy to AWS EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the latest code
+      - name: 🧾 Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup SSH key for EC2 access
+      - name: 🔑 Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      # Step 3: Deploy to AWS EC2
+      - name: 🚀 Deploy application
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 $EC2_USER@$EC2_HOST << 'EOF'
+            set -e
+            cd /home/ubuntu/productai-mcp-server || git clone https://github.com/goutama-opura/productai-mcp-server.git && cd productai-mcp-server
+            echo "🔄 Pulling latest code..."
+            git fetch origin
+            git reset --hard origin/main
+            echo "🐳 Rebuilding Docker containers..."
+            docker compose down
+            docker compose up --build -d
+            echo "✅ Deployment completed successfully!"
+          EOF

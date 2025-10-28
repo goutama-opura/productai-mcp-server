@@ -20,7 +20,7 @@ def analyze_reviews(product_name: str, reviews: list[str] = None):
     """
     if not product_name:
         raise ValueError("Product name is required")
-
+    # Move this as configurable prompt
     base_prompt = f"""
     You are an expert product review analyst.
     Summarize customer feedback for the product "{product_name}".

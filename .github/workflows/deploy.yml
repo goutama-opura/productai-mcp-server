@@ -18,7 +18,7 @@ jobs:
       - name: 🔑 Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
@@ -26,22 +26,23 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo '✅ SSH connection successful!'"
 
-      - name: 🚀 Deploy application
+      - name: 🚀 Deploy application using Docker
         run: |
           ssh -o IdentitiesOnly=yes -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             set -e
-            echo "🔄 Preparing deployment on EC2..."
+            echo "🔄 Deploying ProductAI MCP Server with Docker..."
 
             cd /home/ubuntu
 
-            # Clone repo if not present
+            # Clone repo if not exists
             if [ ! -d "productai-mcp-server" ]; then
-              echo "📂 Cloning fresh repository..."
+              echo "📂 Cloning repository..."
               git clone https://github.com/goutama-opura/productai-mcp-server.git
             fi
 
             cd productai-mcp-server
-            echo "🔄 Fetching latest code..."
+
+            echo "🔄 Pulling latest code..."
             git fetch origin main
             git reset --hard origin/main
 
@@ -49,14 +50,19 @@ jobs:
             echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" > .env
             echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
 
-            if [ -f docker-compose.yml ]; then
-              echo "🐳 Rebuilding Docker containers..."
-              docker compose down || true
-              docker compose up --build -d
-            else
-              echo "🚀 Starting Python app..."
-              nohup python3 services/mcp_server/main.py > app.log 2>&1 &
-            fi
+            echo "🐳 Building Docker image..."
+            docker build -t productai-mcp-server:latest .
 
-            echo "✅ Deployment completed successfully!"
+            echo "🛑 Stopping any existing container..."
+            docker rm -f productai-mcp-server || true
+
+            echo "🚀 Starting container..."
+            docker run -d \
+              --name productai-mcp-server \
+              -p 8001:8001 \
+              --env-file .env \
+              --restart always \
+              productai-mcp-server:latest
+
+            echo "✅ Deployment Successful. API running at http://${{ secrets.EC2_HOST }}:8001/chat"
           EOF

@@ -13,15 +13,6 @@ sys.path.append(
 from services.mcp_server.tools.retrieval_tool import answer_faq
 from services.mcp_server.tools.reviews_tool import analyze_reviews
 
-try:
-    from chains.router_chain import MultiAgentRouter
-    from chains.embed_router import EmbeddingRouter
-    from chains.fallback_chain import FallbackHandler
-    LANGCHAIN_AVAILABLE = True
-except ImportError:
-    logger.warning("LangChain routing modules not found. Using fallback routing only.")
-    LANGCHAIN_AVAILABLE = False
-
 load_dotenv()
 
 app = FastAPI(title="ProductAI - Unified 6-Agent Router")
@@ -29,15 +20,7 @@ logger.add("logs/unified_router.log", rotation="5 MB", level="INFO")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-if LANGCHAIN_AVAILABLE:
-    try:
-        langchain_router = MultiAgentRouter()
-        embed_router = EmbeddingRouter()
-        fallback_handler = FallbackHandler()
-        logger.info("✅ LangChain routers initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize LangChain routers: {e}")
-        LANGCHAIN_AVAILABLE = False
+LANGCHAIN_AVAILABLE = False
 
 UNIFIED_SYSTEM_PROMPT = """
 You are "ProductAI Assistant", an intelligent routing agent for an e-commerce platform.
@@ -268,10 +251,7 @@ async def unified_chat(request: Request):
 
         logger.info(f"[CHAT] User: {user_input}")
 
-        if LANGCHAIN_AVAILABLE:
-            routing = route_with_langchain(user_input, context)
-        else:
-            routing = route_with_llm(user_input)
+        routing = route_with_llm(user_input)
 
         selected_agent = routing["agent"]
         confidence = routing["confidence"]
@@ -296,7 +276,6 @@ async def unified_chat(request: Request):
 def health_check():
     return {
         "status": "ok",
-        "langchain_available": LANGCHAIN_AVAILABLE,
         "agents": list(AGENT_HANDLERS.keys()),
     }
 

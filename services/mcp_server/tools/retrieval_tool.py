@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 # ✅ Modern LangChain imports (modular style)
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.chains import ConversationalRetrievalChain
+from langchain_core.prompts import PromptTemplate
 
 load_dotenv()
 
@@ -29,12 +29,32 @@ def make_faq_chain():
         api_key=OPENAI_API_KEY
     )
 
-    chain = ConversationalRetrievalChain.from_llm(
-        llm,
-        retriever,
-        return_source_documents=True
+    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+    {context}
+
+    Question: {question}
+    Answer:"""
+
+    PROMPT = PromptTemplate(
+        template=prompt_template, input_variables=["context", "question"]
     )
-    return chain
+
+    # Simple retrieval chain without RetrievalQA
+    from langchain_core.runnables import RunnablePassthrough
+    from langchain_core.output_parsers import StrOutputParser
+
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | PROMPT
+        | llm
+        | StrOutputParser()
+    )
+
+    return rag_chain
 
 
 def answer_faq(question: str, chat_history=None):
@@ -44,13 +64,9 @@ def answer_faq(question: str, chat_history=None):
     chat_history = chat_history or []
     chain = make_faq_chain()
 
-    result = chain.invoke({"question": question, "chat_history": chat_history})
-    answer = result["answer"]
-    sources = [
-        d.page_content[:250] for d in result.get("source_documents", [])
-    ]
+    answer = chain.invoke(question)
 
     return {
         "answer": answer,
-        "sources": sources
+        "sources": []
     }

@@ -1,11 +1,17 @@
+# services/mcp_server/router_agent.py
 import os
 import json
 import sys
-from fastapi import FastAPI, Request
+import base64
+import io
+from fastapi import FastAPI, Request, UploadFile, File
 from dotenv import load_dotenv
 from loguru import logger
 from openai import OpenAI
 
+# ------------------------------------------------------------------
+# 1. PATH & EXTERNAL TOOLS
+# ------------------------------------------------------------------
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
@@ -44,18 +50,17 @@ Respond in JSON format:
 Be precise and confident in your routing decision.
 """
 
-
+# ------------------------------------------------------------------
+# 2. AGENT HANDLERS
+# ------------------------------------------------------------------
 def handle_profiling_agent(user_input: str, context: dict = None) -> dict:
     try:
         prompt = f"""You are a Product Recommendation Specialist.
-        
 User Query: {user_input}
-
 Provide personalized product recommendations based on the query. Include:
 - Recommended products/categories
 - Reasoning for recommendations
 - Personalization insights
-
 Response:"""
 
         response = client.chat.completions.create(
@@ -63,7 +68,6 @@ Response:"""
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
         )
-
         return {
             "agent": "profiling",
             "response": response.choices[0].message.content,
@@ -77,15 +81,12 @@ Response:"""
 def handle_ticketing_agent(user_input: str, context: dict = None) -> dict:
     try:
         prompt = f"""You are a Customer Support Ticketing Specialist.
-
 User Query: {user_input}
-
 Handle this support request by:
 - Creating a ticket summary
 - Identifying the issue type
 - Providing next steps
 - Offering immediate assistance
-
 Response:"""
 
         response = client.chat.completions.create(
@@ -93,7 +94,6 @@ Response:"""
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
         )
-
         return {
             "agent": "ticketing",
             "response": response.choices[0].message.content,
@@ -107,15 +107,12 @@ Response:"""
 def handle_troubleshooting_agent(user_input: str, context: dict = None) -> dict:
     try:
         prompt = f"""You are a Technical Troubleshooting Specialist.
-
 User Query: {user_input}
-
 Diagnose and resolve this technical issue by:
 - Identifying the problem
 - Providing step-by-step solutions
 - Offering workarounds if needed
 - Explaining technical details clearly
-
 Response:"""
 
         response = client.chat.completions.create(
@@ -123,7 +120,6 @@ Response:"""
             messages=[{"role": "user", "content": prompt}],
             temperature=0.2,
         )
-
         return {
             "agent": "troubleshooting",
             "response": response.choices[0].message.content,
@@ -141,15 +137,12 @@ Response:"""
 def handle_customer_care_agent(user_input: str, context: dict = None) -> dict:
     try:
         prompt = f"""You are a Customer Care Representative.
-
 User Query: {user_input}
-
 Provide friendly, helpful customer service by:
 - Addressing their concern empathetically
 - Offering relevant assistance
 - Escalating to human if requested
 - Maintaining professional tone
-
 Response:"""
 
         response = client.chat.completions.create(
@@ -157,7 +150,6 @@ Response:"""
             messages=[{"role": "user", "content": prompt}],
             temperature=0.5,
         )
-
         return {
             "agent": "customer_care",
             "response": response.choices[0].message.content,
@@ -203,6 +195,9 @@ AGENT_HANDLERS = {
 }
 
 
+# ------------------------------------------------------------------
+# 3. ROUTING
+# ------------------------------------------------------------------
 def route_with_llm(user_input: str) -> dict:
     try:
         response = client.chat.completions.create(
@@ -213,7 +208,6 @@ def route_with_llm(user_input: str) -> dict:
             ],
             temperature=0.1,
         )
-
         result = json.loads(response.choices[0].message.content)
         return result
     except Exception as e:
@@ -228,7 +222,6 @@ def route_with_llm(user_input: str) -> dict:
 def route_with_langchain(user_input: str, context: dict = None) -> dict:
     try:
         routing_result = langchain_router.route_request(user_input, context)
-
         return {
             "agent": routing_result.routing_decision.agent.value,
             "confidence": routing_result.routing_decision.confidence,
@@ -239,6 +232,9 @@ def route_with_langchain(user_input: str, context: dict = None) -> dict:
         return route_with_llm(user_input)
 
 
+# ------------------------------------------------------------------
+# 4. ENDPOINTS
+# ------------------------------------------------------------------
 @app.post("/chat")
 async def unified_chat(request: Request):
     try:
@@ -295,9 +291,85 @@ def root():
         "endpoints": {
             "chat": "/chat (POST)",
             "health": "/health (GET)",
+            "analyze-image": "/analyze-image (POST, multipart/form-data)",
             "docs": "/docs",
         },
     }
+
+
+# ------------------------------------------------------------------
+# 5. NEW IMAGE-ANALYSIS ENDPOINT (self-contained, no extra file)
+# ------------------------------------------------------------------
+async def _compress_image(raw_bytes: bytes) -> bytes:
+    """Resize + compress image to stay under OpenAI limits."""
+    try:
+        from PIL import Image as PIL_Image
+    except ImportError:
+        logger.warning("Pillow not installed – returning original bytes")
+        return raw_bytes
+
+    img = PIL_Image.open(io.BytesIO(raw_bytes))
+    if img.mode in ("RGBA", "LA", "P"):
+        img = img.convert("RGB")
+
+    MAX_DIM = 1024
+    if max(img.size) > MAX_DIM:
+        ratio = MAX_DIM / max(img.size)
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, PIL_Image.Resampling.LANCZOS)
+
+    buf = io.BytesIO()
+    quality = 85
+    while True:
+        buf.seek(0)
+        buf.truncate(0)
+        img.save(buf, format="JPEG", quality=quality, optimize=True)
+        compressed = buf.getvalue()
+        if len(compressed) <= 800 * 1024 or quality <= 30:
+            break
+        quality -= 10
+    return compressed
+
+
+async def analyze_image(file: UploadFile = File(...)) -> dict:
+    """Return a short description of the uploaded image."""
+    try:
+        logger.info(f"Analyzing image: {file.filename}")
+
+        raw = await file.read()
+        compressed = await _compress_image(raw)
+        b64 = base64.b64encode(compressed).decode()
+        data_url = f"data:image/jpeg;base64,{b64}"
+
+        completion = client.chat.completions.create(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that describes images in simple language."},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Describe this image briefly."},
+                        {"type": "image_url", "image_url": {"url": data_url}}
+                    ]
+                }
+            ],
+            temperature=0.2,
+            max_tokens=150,
+            timeout=30,
+        )
+        desc = completion.choices[0].message.content.strip()
+        return {"description": desc}
+
+    except Exception as e:
+        logger.exception("Image analysis failed")
+        return {"error": str(e)}
+
+
+@app.post("/analyze-image")
+async def analyze_image_endpoint(file: UploadFile = File(...)):
+    """Public wrapper – appears in Swagger UI."""
+    return await analyze_image(file)
+
 
 
 if __name__ == "__main__":

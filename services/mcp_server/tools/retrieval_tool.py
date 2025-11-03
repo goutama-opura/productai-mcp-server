@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-# ✅ Modern LangChain imports (modular style)
+
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains import ConversationalRetrievalChain

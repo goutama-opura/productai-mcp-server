@@ -5,14 +5,27 @@ from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from loguru import logger
 from openai import OpenAI
+from pydantic import BaseModel
+
 
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
-
+class ChatRequest(BaseModel):
+    message: str
+    context: dict = {}
+# importing tools
 from services.mcp_server.tools.retrieval_tool import answer_faq
 from services.mcp_server.tools.reviews_tool import analyze_reviews
-
+# importing rag search handler
+from services.mcp_server.rag_search.ingestion import load_csv
+from services.mcp_server.rag_search.text_embedding import generate_text_embedding
+from services.mcp_server.rag_search.retriever import Retriever
+from services.mcp_server.rag_search.generator import generate_answer
+from services.mcp_server.rag_search.image_embedding import fetch_image, generate_image_embedding
+from services.mcp_server.rag_search.insert_vectors import VectorStore
+from services.mcp_server.rag_search.faiss_index import FaissIndex
+from services.mcp_server.rag_search.rag_pipeline import RagPipeline
 load_dotenv()
 
 app = FastAPI(title="ProductAI - Unified 6-Agent Router")
@@ -33,7 +46,7 @@ Your job is to analyze the user's query and route it to the most appropriate age
 4. **customer_care** - General support, speak to human, escalation requests
 5. **faq** - Questions about policies, shipping, payments, account management
 6. **reviews** - Product reviews, ratings, customer feedback, pros/cons
-
+7. **rag_search** - In-depth product information retrieval using RAG , when user queries require detailed product knowledge or specifications.
 Respond in JSON format:
 {
   "agent": "agent_name",
@@ -102,6 +115,8 @@ Response:"""
     except Exception as e:
         logger.error(f"Ticketing agent error: {e}")
         return {"agent": "ticketing", "response": f"Error: {str(e)}", "success": False}
+    
+
 
 
 def handle_troubleshooting_agent(user_input: str, context: dict = None) -> dict:
@@ -191,6 +206,30 @@ def handle_reviews_tool(user_input: str, context: dict = None) -> dict:
     except Exception as e:
         logger.error(f"Reviews tool error: {e}")
         return {"agent": "reviews", "response": f"Error: {str(e)}", "success": False}
+    
+#adding rag search
+rag_pipeline = RagPipeline()
+def handle_rag_search_agent(user_input: str, context: dict = None) -> dict:
+    try:
+        # Run retrieval and generation via the pipeline method
+        answer, results = rag_pipeline.run_query(user_input)
+        if not results:
+            return {"agent": "rag_search", "response": "No relevant documents found.", "success": True}
+        
+        return {
+            "agent": "rag_search",
+            "response": answer,
+            "source_documents": results,
+            "success": True,
+        }
+    except Exception as e:
+        logger.error(f"Error in RAG search agent: {e}")
+        return {
+            "agent": "rag_search",
+            "response": f"Error: {str(e)}",
+            "success": False,
+        }
+    #....
 
 
 AGENT_HANDLERS = {
@@ -200,6 +239,7 @@ AGENT_HANDLERS = {
     "customer_care": handle_customer_care_agent,
     "faq": handle_faq_tool,
     "reviews": handle_reviews_tool,
+    "rag_search": handle_rag_search_agent,
 }
 
 
@@ -240,12 +280,11 @@ def route_with_langchain(user_input: str, context: dict = None) -> dict:
 
 
 @app.post("/chat")
-async def unified_chat(request: Request):
-    try:
-        body = await request.json()
-        user_input = body.get("message", "")
-        context = body.get("context", {})
+async def unified_chat(request: ChatRequest):
+    user_input = request.message
+    context = request.context
 
+    try:
         if not user_input:
             return {"error": "Missing 'message' field"}
 
@@ -270,6 +309,7 @@ async def unified_chat(request: Request):
     except Exception as e:
         logger.error(f"Chat endpoint error: {e}")
         return {"error": str(e)}
+
 
 
 @app.get("/health")

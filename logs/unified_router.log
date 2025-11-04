@@ -1,0 +1,24 @@
+2025-11-03 16:22:20.242 | ERROR    | services.mcp_server.router_agent:unified_chat:271 - Chat endpoint error: Expecting value: line 1 column 1 (char 0)
+2025-11-03 16:34:07.100 | INFO     | services.mcp_server.router_agent:unified_chat:252 - [CHAT] User: test
+2025-11-03 16:34:10.932 | INFO     | services.mcp_server.router_agent:unified_chat:259 - [ROUTING] Agent: customer_care, Confidence: 0.90
+2025-11-03 16:36:03.491 | INFO     | services.mcp_server.router_agent:unified_chat:252 - [CHAT] User: I need recommendations for running shoes
+2025-11-03 16:36:06.337 | INFO     | services.mcp_server.router_agent:unified_chat:259 - [ROUTING] Agent: profiling, Confidence: 0.98
+2025-11-03 17:14:14.882 | ERROR    | services.mcp_server.router_agent:unified_chat:277 - Chat endpoint error: object str can't be used in 'await' expression
+2025-11-03 17:14:45.085 | ERROR    | services.mcp_server.router_agent:unified_chat:277 - Chat endpoint error: object str can't be used in 'await' expression
+2025-11-03 17:19:45.396 | ERROR    | services.mcp_server.router_agent:unified_chat:277 - Chat endpoint error: object str can't be used in 'await' expression
+2025-11-03 17:25:09.376 | INFO     | services.mcp_server.router_agent:unified_chat:255 - [CHAT] User: What is your return policy?
+2025-11-03 17:25:12.276 | INFO     | services.mcp_server.router_agent:unified_chat:262 - [ROUTING] Agent: faq, Confidence: 0.95
+2025-11-04 04:49:57.734 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User: what are the best shampoo?
+2025-11-04 04:50:03.399 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: reviews, Confidence: 0.92
+2025-11-04 04:50:42.800 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User: show me the shampoo
+2025-11-04 04:50:45.677 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90
+2025-11-04 05:08:28.074 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User: show me the shampoo
+2025-11-04 05:08:32.290 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90
+2025-11-04 05:09:49.531 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User:  shampoo
+2025-11-04 05:09:51.195 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90
+2025-11-04 05:13:36.721 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User:  shampoo
+2025-11-04 05:13:40.474 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90
+2025-11-04 05:14:33.306 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User:  find me shampoo
+2025-11-04 05:14:34.600 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90
+2025-11-04 05:16:36.274 | INFO     | services.mcp_server.router_agent:unified_chat:291 - [CHAT] User:  women cycling shorts
+2025-11-04 05:16:39.076 | INFO     | services.mcp_server.router_agent:unified_chat:298 - [ROUTING] Agent: profiling, Confidence: 0.90

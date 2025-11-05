@@ -338,9 +338,84 @@ def root():
             "docs": "/docs",
         },
     }
+# ------------------------------------------------------------------
+# 5. NEW IMAGE-ANALYSIS ENDPOINT (self-contained, no extra file)
+# ------------------------------------------------------------------
+async def _compress_image(raw_bytes: bytes) -> bytes:
+    """Resize + compress image to stay under OpenAI limits."""
+    try:
+        from PIL import Image as PIL_Image
+    except ImportError:
+        logger.warning("Pillow not installed – returning original bytes")
+        return raw_bytes
+
+    img = PIL_Image.open(io.BytesIO(raw_bytes))
+    if img.mode in ("RGBA", "LA", "P"):
+        img = img.convert("RGB")
+
+    MAX_DIM = 1024
+    if max(img.size) > MAX_DIM:
+        ratio = MAX_DIM / max(img.size)
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, PIL_Image.Resampling.LANCZOS)
+
+    buf = io.BytesIO()
+    quality = 85
+    while True:
+        buf.seek(0)
+        buf.truncate(0)
+        img.save(buf, format="JPEG", quality=quality, optimize=True)
+        compressed = buf.getvalue()
+        if len(compressed) <= 800 * 1024 or quality <= 30:
+            break
+        quality -= 10
+    return compressed
+
+
+async def analyze_image(file: UploadFile = File(...)) -> dict:
+    """Return a short description of the uploaded image."""
+    try:
+        logger.info(f"Analyzing image: {file.filename}")
+
+        raw = await file.read()
+        compressed = await _compress_image(raw)
+        b64 = base64.b64encode(compressed).decode()
+        data_url = f"data:image/jpeg;base64,{b64}"
+
+        completion = client.chat.completions.create(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that describes images in simple language."},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Describe this image briefly."},
+                        {"type": "image_url", "image_url": {"url": data_url}}
+                    ]
+                }
+            ],
+            temperature=0.2,
+            max_tokens=150,
+            timeout=30,
+        )
+        desc = completion.choices[0].message.content.strip()
+        return {"description": desc}
+
+    except Exception as e:
+        logger.exception("Image analysis failed")
+        return {"error": str(e)}
+
+
+@app.post("/analyze-image")
+async def analyze_image_endpoint(file: UploadFile = File(...)):
+    """Public wrapper – appears in Swagger UI."""
+    return await analyze_image(file)
+
 
 
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("MCP_PORT", 8001))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+
